@@ -1,16 +1,36 @@
 package jp.speakbuddy.edisonandroidexercise.ui.fact
 
 import androidx.lifecycle.ViewModel
-import jp.speakbuddy.edisonandroidexercise.network.FactServiceProvider
-import kotlinx.coroutines.runBlocking
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jp.speakbuddy.edisonandroidexercise.storage.repository.CatFactRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FactViewModel : ViewModel() {
-    fun updateFact(completion: () -> Unit): String =
-        runBlocking {
-            try {
-                FactServiceProvider.provide().getFact().fact
-            } catch (e: Throwable) {
-                "something went wrong. error = ${e.message}"
-            }.also { completion() }
+@HiltViewModel
+class FactViewModel @Inject constructor(
+    private val catFactRepository: CatFactRepository
+) : ViewModel() {
+
+    private val _catFactResult = MutableStateFlow(Result.success(""))
+    val catFactResult: StateFlow<Result<String>> = _catFactResult.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _catFactResult.value = kotlin.runCatching {
+                catFactRepository.getSavedCatFact().orEmpty()
+            }
         }
+    }
+
+    fun fetchCatFact() {
+        viewModelScope.launch {
+            _catFactResult.value = kotlin.runCatching {
+                catFactRepository.getCatFact()
+            }
+        }
+    }
 }

@@ -10,6 +10,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,23 +36,31 @@ fun FactScreen(
             alignment = Alignment.CenterVertically
         )
     ) {
-        var fact by remember { mutableStateOf("") }
+        val catFactResult by viewModel.catFactResult.collectAsState()
 
         Text(
             text = "Fact",
             style = MaterialTheme.typography.titleLarge
         )
 
-        Text(
-            text = fact,
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-        val onClick = {
-            fact = viewModel.updateFact { print("done") }
+        when {
+            catFactResult.isSuccess -> {
+                Text(
+                    text = catFactResult.getOrNull() ?: "", // Handle null case
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            catFactResult.isFailure -> {
+                Text(
+                    text = "Error: ${catFactResult.exceptionOrNull()?.message ?: "Unknown error"}",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+            // You can add a loading state here if needed
         }
 
-        Button(onClick = onClick) {
+        Button(onClick = { viewModel.fetchCatFact() }) {
             Text(text = "Update fact")
         }
     }
@@ -61,6 +70,6 @@ fun FactScreen(
 @Composable
 private fun FactScreenPreview() {
     EdisonAndroidExerciseTheme {
-        FactScreen(viewModel = FactViewModel())
+       // FactScreen(viewModel = FactViewModel())
     }
 }

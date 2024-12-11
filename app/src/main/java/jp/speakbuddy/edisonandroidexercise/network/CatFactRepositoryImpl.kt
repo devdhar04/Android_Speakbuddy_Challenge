@@ -16,14 +16,22 @@ class CatFactRepositoryImpl @Inject constructor(
 
     override suspend fun getCatFact(): String {
         return withContext(Dispatchers.IO) {
-            val latestCatFact = catFactDao.getLatestCatFact().firstOrNull()
-            if (latestCatFact != null) {
-                latestCatFact.fact
-            } else {
-                val newCatFact = catFactApi.getFact().fact
+            val response = catFactApi.getFact() // Call FactService
+            if (response.isSuccessful) {
+                val factResponse = response.body()
+                val newCatFact = factResponse?.fact ?: "" // Handle null case
                 catFactDao.insertCatFact(CatFactEntity(fact = newCatFact))
                 newCatFact
+            } else {
+                // Handle error (e.g., throw an exception)
+                throw Exception("Failed to fetch cat fact")
             }
+        }
+    }
+
+    override suspend fun getSavedCatFact(): String? {
+        return withContext(Dispatchers.IO) {
+            catFactDao.getLatestCatFact().firstOrNull()?.fact
         }
     }
 }

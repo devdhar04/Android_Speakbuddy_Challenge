@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FactResponse(
     val fact: String,
-    val length: Int
+    val length: Int = 0
 ) {
 }

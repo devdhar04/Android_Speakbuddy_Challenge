@@ -42,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
     packagingOptions {
         resources {
@@ -71,16 +71,17 @@ protobuf {
 }
 
 dependencies {
+    implementation(project(":storage"))
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
-    implementation("androidx.activity:activity-compose:1.9.0")
-    implementation("androidx.compose.ui:ui:1.6.7")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.6.7")
-    implementation("androidx.compose.material3:material3:1.2.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+    implementation("androidx.activity:activity-compose:1.9.3")
+    implementation("androidx.compose.ui:ui:1.7.5")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.7.5")
+    implementation("androidx.compose.material3:material3:1.3.1")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("androidx.datastore:datastore:1.1.1")
-    implementation("com.google.dagger:hilt-android:2.51")
-    kapt("com.google.dagger:hilt-android-compiler:2.44.2")
+    implementation("com.google.dagger:hilt-android:2.52")
+    kapt("com.google.dagger:hilt-android-compiler:2.52")
     implementation("com.google.protobuf:protobuf-kotlin-lite:3.25.2")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
@@ -88,6 +89,9 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    implementation("com.google.dagger:hilt-android:2.52")
+    kapt("com.google.dagger:hilt-android-compiler:2.52")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

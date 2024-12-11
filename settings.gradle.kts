@@ -16,3 +16,4 @@ rootProject.name = "edison_android_exercise"
 
 include(":app")
 include(":storage")
+include(":network")

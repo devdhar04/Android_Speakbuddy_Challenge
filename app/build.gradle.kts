@@ -26,9 +26,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "CAT_URL", "\"https://cataas.com/cat?type=square&position=center&width=100&height=100\"")
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            buildConfigField("String", "CAT_URL", "\"https://cataas.com/cat?type=square&position=center&width=100&height=100\"")
         }
     }
     compileOptions {
@@ -48,6 +53,9 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 

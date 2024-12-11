@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import jp.speakbuddy.edisonandroidexercise.BuildConfig
 import jp.speakbuddy.edisonandroidexercise.ui.theme.EdisonAndroidExerciseTheme
 
 @Composable
@@ -43,9 +44,9 @@ fun FactScreen(
         )
 
         AsyncImage(
-            model = "https://cataas.com/cat?type=square&position=center&width=100&height=100", // Replace with your image URL
+            model = BuildConfig.CAT_URL,
             contentDescription = "Cat Image",
-            modifier = Modifier.size(200.dp) // Adjust size as needed
+            modifier = Modifier.size(300.dp)
         )
 
 

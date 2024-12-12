@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class CatFactEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val fact: String,
-    val length : Int
+    val length: Int
 )

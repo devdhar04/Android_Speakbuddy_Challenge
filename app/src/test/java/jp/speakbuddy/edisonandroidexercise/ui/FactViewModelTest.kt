@@ -1,11 +1,10 @@
 package jp.speakbuddy.edisonandroidexercise.ui
 
-import jp.speakbuddy.edisonandroidexercise.ui.fact.FactViewModel
 import org.junit.Test
 
 class FactViewModelTest {
 
-   // private val viewModel = FactViewModel()
+    // private val viewModel = FactViewModel()
 
     @Test
     fun updateFact() {
@@ -13,9 +12,9 @@ class FactViewModelTest {
         val initialFact = "initial"
         var fact = initialFact
 
-//        fact = viewModel.updateFact { loading = false }
-//
-//        assert(!loading)
-//        assert(fact != initialFact)
+        //        fact = viewModel.updateFact { loading = false }
+        //
+        //        assert(!loading)
+        //        assert(fact != initialFact)
     }
 }

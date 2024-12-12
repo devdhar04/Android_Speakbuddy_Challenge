@@ -7,12 +7,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepositoryImpl
-import jp.speakbuddy.edisonandroidexercise.network.FactService
 import jp.speakbuddy.edisonandroidexercise.network.ApiClient
+import jp.speakbuddy.edisonandroidexercise.network.FactService
+import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepository
+import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepositoryImpl
 import jp.speakbuddy.edisonandroidexercise.storage.CatFactDatabase
 import jp.speakbuddy.edisonandroidexercise.storage.dao.CatFactDao
-import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepository
 import javax.inject.Singleton
 
 @Module
@@ -51,5 +51,4 @@ class Modules {
     ): CatFactRepository {
         return CatFactRepositoryImpl(catFactApi, catFactDao)
     }
-
 }

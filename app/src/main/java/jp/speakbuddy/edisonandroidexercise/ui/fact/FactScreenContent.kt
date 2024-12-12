@@ -14,8 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import jp.speakbuddy.edisonandroidexercise.R
 import jp.speakbuddy.edisonandroidexercise.ui.FactScreenState
 
 @Composable
@@ -39,19 +41,19 @@ fun FactScreenContent(
             if (uiState.isLoading) {
                 CircularProgressIndicator()
             } else if (uiState.error != null) {
-                Text(text = "Error: ${uiState.error}")
+                Text(text = stringResource(R.string.error, uiState.error))
             } else {
                 Text(text = uiState.fact)
                 if (uiState.showMultipleCats) {
-                    Text(text = "Multiple cats!", style = MaterialTheme.typography.titleLarge, color = Color.Red)
+                    Text(text = stringResource(R.string.multiple_cats), style = MaterialTheme.typography.titleLarge, color = Color.Red)
                 }
                 if (uiState.factLength != null && uiState.factLength > 100) {
-                    Text(text = "Fact Length: ${uiState.factLength}", style = MaterialTheme.typography.bodySmall)
+                    Text(text = stringResource(R.string.fact_length, uiState.factLength), style = MaterialTheme.typography.bodySmall)
                 }
                 uiState.imageUrl?.let { url ->
                     AsyncImage(
                         model = url,
-                        contentDescription = "Cat Image",
+                        contentDescription = stringResource(R.string.cat_image),
                         modifier = Modifier.size(200.dp)
                     )
                 }
@@ -59,7 +61,7 @@ fun FactScreenContent(
         }
 
         Button(onClick = onRefresh, modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Update fact")
+            Text(text = stringResource(R.string.update_fact))
         }
     }
 }

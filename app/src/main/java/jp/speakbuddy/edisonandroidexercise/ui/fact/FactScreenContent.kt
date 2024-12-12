@@ -38,25 +38,24 @@ fun FactScreenContent(
                 alignment = Alignment.CenterVertically
             )
         ) {
-            if (uiState.isLoading) {
-                CircularProgressIndicator()
-            } else if (uiState.error != null) {
-                Text(text = stringResource(R.string.error, uiState.error))
-            } else {
-                Text(text = uiState.fact)
-                if (uiState.showMultipleCats) {
-                    Text(text = stringResource(R.string.multiple_cats), style = MaterialTheme.typography.titleLarge, color = Color.Red)
-                }
-                if (uiState.factLength != null && uiState.factLength > 100) {
-                    Text(text = stringResource(R.string.fact_length, uiState.factLength), style = MaterialTheme.typography.bodySmall)
-                }
-                uiState.imageUrl?.let { url ->
-                    AsyncImage(
-                        model = url,
-                        contentDescription = stringResource(R.string.cat_image),
-                        modifier = Modifier.size(200.dp)
-                    )
-                }
+            when(uiState){
+                is FactScreenState.Success -> {
+                    Text(text = uiState.fact)
+                    if (uiState.showMultipleCats) {
+                        Text(text = stringResource(R.string.multiple_cats), style = MaterialTheme.typography.titleLarge, color = Color.Red)
+                    }
+                    if (uiState.showFactLength) {
+                        Text(text = stringResource(R.string.fact_length, uiState.factLength), style = MaterialTheme.typography.bodySmall)
+                    }
+                    uiState.imageUrl?.let { url ->
+                        AsyncImage(
+                            model = url,
+                            contentDescription = stringResource(R.string.cat_image),
+                            modifier = Modifier.size(200.dp)
+                        )
+                    }}
+                is FactScreenState.Error -> Text(text = stringResource(R.string.error, uiState.errorMessage))
+                is FactScreenState.Loading -> CircularProgressIndicator()
             }
         }
 

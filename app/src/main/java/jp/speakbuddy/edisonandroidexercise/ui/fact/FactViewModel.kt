@@ -18,7 +18,7 @@ class FactViewModel @Inject constructor(
     private val catFactRepository: CatFactRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(FactScreenState(isLoading = true))
+    private val _uiState = MutableStateFlow<FactScreenState>(FactScreenState.Loading)
     val uiState: StateFlow<FactScreenState> = _uiState.asStateFlow()
 
     init {
@@ -28,13 +28,14 @@ class FactViewModel @Inject constructor(
     }
 
     private suspend fun fetchSavedCatFact() {
-        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+        _uiState.value = FactScreenState.Loading
 
         val savedFact = catFactRepository.getSavedCatFact()
         if (savedFact != null) {
-            _uiState.value = _uiState.value.copy(
+            _uiState.value = FactScreenState.Success(
                 fact = savedFact.fact,
-                isLoading = false,
+                showMultipleCats = savedFact.fact.contains("cats", ignoreCase = true),
+                factLength = savedFact.length,
                 imageUrl = BuildConfig.CAT_URL
             )
         } else {
@@ -44,24 +45,22 @@ class FactViewModel @Inject constructor(
 
     fun fetchCatFact() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-
+            _uiState.value = FactScreenState.Loading
             when (val result = catFactRepository.getCatFact()) {
                 is Result.Success -> {
                     val factResponse = result.data
-                    _uiState.value = _uiState.value.copy(
+                    _uiState.value = FactScreenState.Success(
                         fact = factResponse.fact,
-                        isLoading = false,
                         showMultipleCats = factResponse.fact.contains("cats", ignoreCase = true),
                         factLength = factResponse.length,
-                        imageUrl = BuildConfig.CAT_URL
+                        imageUrl = BuildConfig.CAT_URL,
+                        showFactLength = factResponse.length > 100
                     )
                 }
-
                 is Result.Error -> {
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        error = result.message ?: "An unexpected error occurred"
+                    _uiState.value = FactScreenState.Error(
+                        errorMessage = result.message ?: "An unexpected error occurred",
+                        cause = Exception()
                     )
                 }
             }

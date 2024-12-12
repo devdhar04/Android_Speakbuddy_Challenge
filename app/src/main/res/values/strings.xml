@@ -5,4 +5,5 @@
     <string name="multiple_cats">Multiple cats!</string>
     <string name="cat_image">Cat Image</string>
     <string name="update_fact">Update fact</string>
+    <string name="cat_facts">Cat Facts</string>
 </resources>

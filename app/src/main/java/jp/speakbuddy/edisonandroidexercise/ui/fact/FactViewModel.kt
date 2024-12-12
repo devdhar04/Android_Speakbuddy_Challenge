@@ -4,6 +4,7 @@ import androidx.compose.animation.core.copy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import jp.speakbuddy.edisonandroidexercise.BuildConfig
 import jp.speakbuddy.edisonandroidexercise.network.model.FactResponse
 import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepository
 import jp.speakbuddy.edisonandroidexercise.ui.FactScreenState
@@ -18,11 +19,18 @@ open class FactViewModel @Inject constructor(
     private val catFactRepository: CatFactRepository
 ) : ViewModel() {
 
-    internal val _uiState = MutableStateFlow(FactScreenState(isLoading = true)) // Initial state
+    private val _uiState = MutableStateFlow(FactScreenState(isLoading = true)) // Initial state
     val uiState: StateFlow<FactScreenState> = _uiState.asStateFlow()
 
     init {
-        fetchCatFact() // Fetch initial fact
+        viewModelScope.launch {
+            val savedFact = catFactRepository.getSavedCatFact()
+            if (savedFact != null) {
+                _uiState.value = _uiState.value.copy(fact = savedFact.fact, isLoading = false, imageUrl = BuildConfig.CAT_URL)
+            } else {
+                fetchCatFact()
+            }
+        }
     }
 
     open fun fetchCatFact() {
@@ -36,7 +44,7 @@ open class FactViewModel @Inject constructor(
                         isLoading = false,
                         showMultipleCats = factResponse.fact.contains("cats", ignoreCase = true),
                         factLength = factResponse.length,
-                        imageUrl = ""
+                        imageUrl = BuildConfig.CAT_URL
                     )
                 }
                 else{

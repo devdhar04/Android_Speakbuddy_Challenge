@@ -15,16 +15,14 @@ class CatFactRepositoryImpl @Inject constructor(
     private val catFactDao: CatFactDao
 ) : CatFactRepository {
 
-    override suspend fun getCatFact(): FactResponse? {
+    override suspend fun getCatFact(): FactResponse {
         return withContext(Dispatchers.IO) {
-            val response = catFactApi.getFact() // Call FactService
-            if (response.isSuccessful && response.body() != null) {
-                val factResponse = response.body()
-
-                catFactDao.insertCatFact(CatFactEntity(fact = factResponse!!.fact, length = factResponse.length))
+            val response = catFactApi.getFact()
+            val factResponse = response.body()
+            if (response.isSuccessful && factResponse != null) {
+                catFactDao.insertCatFact(CatFactEntity(fact = factResponse.fact, length = factResponse.length))
                 factResponse
             } else {
-                // Handle error (e.g., throw an exception)
                 throw Exception("Failed to fetch cat fact")
             }
         }

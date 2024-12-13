@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
+import jp.speakbuddy.edisonandroidexercise.utils.Result
 
 class CatFactRepositoryImpl @Inject constructor(
     private val catFactApi: FactService,
@@ -51,9 +52,4 @@ class CatFactRepositoryImpl @Inject constructor(
     private fun mapEntityToResponse(entity: CatFactEntity): FactResponse {
         return FactResponse(fact = entity.fact, length = entity.length)
     }
-}
-
-sealed class Result<out T> {
-    data class Success<out T>(val data: T) : Result<T>()
-    data class Error(val message: String) : Result<Nothing>()
 }

@@ -1,4 +1,4 @@
-package jp.speakbuddy.edisonandroidexercise.ui.fact
+package jp.speakbuddy.edisonandroidexercise.viewmodel
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jp.speakbuddy.edisonandroidexercise.BuildConfig
 import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepository
-import jp.speakbuddy.edisonandroidexercise.repository.Result
 import jp.speakbuddy.edisonandroidexercise.ui.FactScreenState
 import jp.speakbuddy.edisonandroidexercise.utils.Config.Companion.FACT_LENGTH
 import jp.speakbuddy.edisonandroidexercise.utils.Config.Companion.SEARCH_TEXT
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import jp.speakbuddy.edisonandroidexercise.utils.Result
 
 @HiltViewModel
 class FactViewModel @Inject constructor(

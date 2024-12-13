@@ -27,13 +27,13 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "CAT_URL", "\"https://cataas.com/cat?type=square&position=center&width=100&height=100\"")
+            buildConfigField("String", "CAT_URL", "\"https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_1280.jpg\"")
         }
 
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            buildConfigField("String", "CAT_URL", "\"https://cataas.com/cat?type=square&position=center&width=100&height=100\"")
+            buildConfigField("String", "CAT_URL", "\"https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_1280.jpg\"")
         }
     }
     compileOptions {

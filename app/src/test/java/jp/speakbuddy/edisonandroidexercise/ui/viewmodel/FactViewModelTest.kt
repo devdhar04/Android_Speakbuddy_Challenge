@@ -1,11 +1,12 @@
-package jp.speakbuddy.edisonandroidexercise.ui
+package jp.speakbuddy.edisonandroidexercise.ui.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import jp.speakbuddy.edisonandroidexercise.BuildConfig
 import jp.speakbuddy.edisonandroidexercise.network.model.FactResponse
 import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepository
-import jp.speakbuddy.edisonandroidexercise.repository.Result
-import jp.speakbuddy.edisonandroidexercise.ui.fact.FactViewModel
+import jp.speakbuddy.edisonandroidexercise.ui.FactScreenState
+import jp.speakbuddy.edisonandroidexercise.utils.Result
+import jp.speakbuddy.edisonandroidexercise.viewmodel.FactViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle

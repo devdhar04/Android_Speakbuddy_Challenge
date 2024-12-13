@@ -1,5 +1,7 @@
 package jp.speakbuddy.edisonandroidexercise.ui
 
+import jp.speakbuddy.edisonandroidexercise.BuildConfig
+
 /**
  * Represents the different states of the Fact Screen in the UI.
  */
@@ -22,7 +24,7 @@ sealed class FactScreenState {
         val fact: String,
         val showMultipleCats: Boolean = false,
         val factLength: Int = 0,
-        val imageUrl: String? = null,
+        val imageUrl: String? = BuildConfig.CAT_URL,
         val showFactLength: Boolean = false
     ) : FactScreenState()
 

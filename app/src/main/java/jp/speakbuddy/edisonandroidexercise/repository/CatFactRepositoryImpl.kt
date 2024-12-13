@@ -4,13 +4,11 @@ import jp.speakbuddy.edisonandroidexercise.network.FactService
 import jp.speakbuddy.edisonandroidexercise.network.model.FactResponse
 import jp.speakbuddy.edisonandroidexercise.storage.dao.CatFactDao
 import jp.speakbuddy.edisonandroidexercise.storage.entity.CatFactEntity
+import jp.speakbuddy.edisonandroidexercise.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
-import jp.speakbuddy.edisonandroidexercise.utils.Result
 
 class CatFactRepositoryImpl @Inject constructor(
     private val catFactApi: FactService,
@@ -19,11 +17,11 @@ class CatFactRepositoryImpl @Inject constructor(
 
     override suspend fun getCatFact(): Result<FactResponse> {
         return safeApiCall {
-            val response  = catFactApi.getFact()
+            val response = catFactApi.getFact()
             if (response.isSuccessful) {
                 val factResponse = response.body()
-                if (factResponse != null) {
-                    catFactDao.insertCatFact(CatFactEntity(fact = factResponse.fact, length = factResponse.length))
+                factResponse?.let {
+                    catFactDao.insertCatFact(CatFactEntity(fact = it.fact, length = it.length))
                 }
             }
             response
@@ -32,11 +30,8 @@ class CatFactRepositoryImpl @Inject constructor(
 
     override suspend fun getSavedCatFact(): FactResponse? {
         return withContext(Dispatchers.IO) {
-            val entity = catFactDao.getLatestCatFact().firstOrNull()
-            if (entity != null) {
+            catFactDao.getLatestCatFact().firstOrNull()?.let { entity ->
                 mapEntityToResponse(entity)
-            } else {
-                null
             }
         }
     }

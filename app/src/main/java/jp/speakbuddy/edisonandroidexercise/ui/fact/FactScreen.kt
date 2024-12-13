@@ -28,7 +28,14 @@ fun FactScreen(
 @Preview
 @Composable
 private fun FactScreenPreview() {
-    val _uiState = MutableStateFlow(FactScreenState.Success(fact = stringResource(R.string.cat_facts), factLength = 120, showMultipleCats = true, imageUrl = BuildConfig.CAT_URL)) //
+    val _uiState = MutableStateFlow(
+        FactScreenState.Success(
+            fact = stringResource(R.string.cat_facts),
+            factLength = 120,
+            showMultipleCats = true,
+            imageUrl = BuildConfig.CAT_URL
+        )
+    ) //
     val uiState: StateFlow<FactScreenState> = _uiState.asStateFlow()
 
     EdisonAndroidExerciseTheme {

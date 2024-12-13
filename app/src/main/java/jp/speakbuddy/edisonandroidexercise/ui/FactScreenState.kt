@@ -23,7 +23,7 @@ sealed class FactScreenState {
         val showMultipleCats: Boolean = false,
         val factLength: Int = 0,
         val imageUrl: String? = null,
-        val showFactLength : Boolean = false
+        val showFactLength: Boolean = false
     ) : FactScreenState()
 
     /**
@@ -33,7 +33,6 @@ sealed class FactScreenState {
      * @param cause An optional throwable cause for debugging.
      */
     data class Error(
-        val errorMessage: String,
-        val cause: Throwable? = null
+        val errorMessage: String
     ) : FactScreenState()
 }

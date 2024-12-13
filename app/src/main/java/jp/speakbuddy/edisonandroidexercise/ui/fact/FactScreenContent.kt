@@ -38,7 +38,7 @@ fun FactScreenContent(
                 alignment = Alignment.CenterVertically
             )
         ) {
-            when(uiState){
+            when (uiState) {
                 is FactScreenState.Success -> {
                     Text(text = uiState.fact)
                     if (uiState.showMultipleCats) {
@@ -53,7 +53,9 @@ fun FactScreenContent(
                             contentDescription = stringResource(R.string.cat_image),
                             modifier = Modifier.size(200.dp)
                         )
-                    }}
+                    }
+                }
+
                 is FactScreenState.Error -> Text(text = stringResource(R.string.error, uiState.errorMessage))
                 is FactScreenState.Loading -> CircularProgressIndicator()
             }

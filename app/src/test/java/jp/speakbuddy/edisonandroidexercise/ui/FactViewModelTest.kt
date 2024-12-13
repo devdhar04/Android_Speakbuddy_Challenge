@@ -1,20 +1,114 @@
 package jp.speakbuddy.edisonandroidexercise.ui
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import jp.speakbuddy.edisonandroidexercise.BuildConfig
+import jp.speakbuddy.edisonandroidexercise.network.model.FactResponse
+import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepository
+import jp.speakbuddy.edisonandroidexercise.repository.Result
+import jp.speakbuddy.edisonandroidexercise.ui.fact.FactViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.junit.MockitoJUnitRunner
 
+@RunWith(MockitoJUnitRunner::class)
 class FactViewModelTest {
 
-    // private val viewModel = FactViewModel()
+    @Mock
+    private lateinit var catFactRepository: CatFactRepository
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    private val testDispatcher = StandardTestDispatcher()
+
+    private lateinit var viewModel: FactViewModel
+
+    @Before
+    fun setup() {
+        Dispatchers.setMain(testDispatcher)
+        viewModel = FactViewModel(catFactRepository)
+    }
 
     @Test
-    fun updateFact() {
-        var loading = true
-        val initialFact = "initial"
-        var fact = initialFact
+    fun `fetchSavedCatFact success`() = runTest {
+        val savedFact = FactResponse("This is a saved cat fact.", 15)
+        Mockito.`when`(catFactRepository.getSavedCatFact()).thenReturn(savedFact)
 
-        //        fact = viewModel.updateFact { loading = false }
-        //
-        //        assert(!loading)
-        //        assert(fact != initialFact)
+        viewModel.fetchSavedCatFact()
+
+        Assert.assertEquals(
+            FactScreenState.Success(
+                fact = savedFact.fact,
+                showMultipleCats = savedFact.fact.contains("cats", ignoreCase = true),
+                factLength = savedFact.length,
+                imageUrl = BuildConfig.CAT_URL,
+                showFactLength = savedFact.length > 100
+            ),
+            viewModel.uiState.value
+        )
+    }
+
+    @Test
+    fun `fetchSavedCatFact null then fetchCatFact`() = runTest {
+        Mockito.`when`(catFactRepository.getSavedCatFact()).thenReturn(null)
+        val factResponse = FactResponse("This is a cat fact.", 15)
+        Mockito.`when`(catFactRepository.getCatFact()).thenReturn(Result.Success(factResponse))
+
+        viewModel.fetchSavedCatFact()
+        advanceUntilIdle()
+        Assert.assertEquals(
+            FactScreenState.Success(
+                fact = factResponse.fact,
+                showMultipleCats = factResponse.fact.contains("cats", ignoreCase = true),
+                factLength = factResponse.length,
+                imageUrl = BuildConfig.CAT_URL,
+                showFactLength = factResponse.length > 100
+            ),
+            viewModel.uiState.value
+        )
+    }
+
+    @Test
+    fun `fetchCatFact success`() = runTest {
+        val factResponse = FactResponse("This is a cat fact.", 15)
+        Mockito.`when`(catFactRepository.getCatFact()).thenReturn(Result.Success(factResponse))
+
+        viewModel.fetchCatFact()
+        advanceUntilIdle()
+        Assert.assertEquals(
+            FactScreenState.Success(
+                fact = factResponse.fact,
+                showMultipleCats = factResponse.fact.contains("cats", ignoreCase = true),
+                factLength = factResponse.length,
+                imageUrl = BuildConfig.CAT_URL,
+                showFactLength = factResponse.length > 100
+            ),
+            viewModel.uiState.value
+        )
+    }
+
+    @Test
+    fun `fetchCatFact error`() = runTest {
+        val exception = Exception()
+        Mockito.`when`(catFactRepository.getCatFact()).thenReturn(Result.Error("Network error"))
+
+        viewModel.fetchCatFact()
+        advanceUntilIdle()
+        Assert.assertEquals(
+            FactScreenState.Error(
+                errorMessage = "Network error",
+            ),
+            viewModel.uiState.value
+        )
     }
 }

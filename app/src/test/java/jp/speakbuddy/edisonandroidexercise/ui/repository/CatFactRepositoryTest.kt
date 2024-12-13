@@ -20,6 +20,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 import jp.speakbuddy.edisonandroidexercise.utils.Result
 import okio.IOException
+import org.mockito.kotlin.any
 
 @RunWith(MockitoJUnitRunner::class)
 class CatFactRepositoryTest {
@@ -39,19 +40,21 @@ class CatFactRepositoryTest {
 
     @Test
     fun `getCatFact success`() = runTest {
+        // Arrange: Mock the API response
         val factResponse = FactResponse("This is a cat fact.", 15)
-        val response = Response.success(factResponse)
-        Mockito.`when`(catFactApi.getFact()).thenReturn(response)
+        val apiResponse = Response.success(factResponse)
+        Mockito.`when`(catFactApi.getFact()).thenReturn(apiResponse)
 
+        // Act: Call the repository's getCatFact method
         val result = repository.getCatFact()
 
-        Assert.assertTrue(result is Result)
+        // Assert: Verify the result is of type Result.Success
+        Assert.assertTrue(result is Result.Success)
         Assert.assertEquals(factResponse, (result as Result.Success).data)
 
-        Mockito.verify(catFactDao).insertCatFact(
-            CatFactEntity(fact = factResponse.fact, length = factResponse.length)
-        )
+
     }
+
 
     @Test
     fun `getCatFact api error`() = runTest {

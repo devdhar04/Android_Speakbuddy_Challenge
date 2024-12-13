@@ -40,7 +40,8 @@ class FactViewModel @Inject constructor(
                 fact = savedFact.fact,
                 showMultipleCats = savedFact.fact.contains("cats", ignoreCase = true),
                 factLength = savedFact.length,
-                imageUrl = BuildConfig.CAT_URL
+                imageUrl = BuildConfig.CAT_URL,
+                showFactLength = savedFact.length > FACT_LENGTH
             )
         } else {
             fetchCatFact()

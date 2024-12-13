@@ -18,23 +18,15 @@ class CatFactRepositoryImpl @Inject constructor(
 ) : CatFactRepository {
 
     override suspend fun getCatFact(): Result<FactResponse> {
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = catFactApi.getFact()
-                if (response.isSuccessful && response.body() != null) {
-                    val factResponse = response.body()!!
+        return safeApiCall {
+            val response  = catFactApi.getFact()
+            if (response.isSuccessful) {
+                val factResponse = response.body()
+                if (factResponse != null) {
                     catFactDao.insertCatFact(CatFactEntity(fact = factResponse.fact, length = factResponse.length))
-                    Result.Success(factResponse)
-                } else {
-                    Result.Error("Error: ${response.code()} - ${response.message()}")
                 }
-            } catch (e: HttpException) {
-                Result.Error("Network error: ${e.message()}")
-            } catch (e: IOException) {
-                Result.Error("Please check your internet connection and try again.")
-            } catch (e: Exception) {
-                Result.Error("Something went wrong: ${e.message}")
             }
+            response
         }
     }
 

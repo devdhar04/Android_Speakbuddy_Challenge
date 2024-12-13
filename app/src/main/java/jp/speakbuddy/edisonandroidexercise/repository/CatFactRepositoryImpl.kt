@@ -16,16 +16,18 @@ class CatFactRepositoryImpl @Inject constructor(
 ) : CatFactRepository {
 
     override suspend fun getCatFact(): Result<FactResponse> {
-        return safeApiCall {
-            val response = catFactApi.getFact()
-            if (response.isSuccessful) {
-                val factResponse = response.body()
-                factResponse?.let {
-                    catFactDao.insertCatFact(CatFactEntity(fact = it.fact, length = it.length))
+        return safeApiCall(
+            apiCall = { val response = catFactApi.getFact()
+                if (response.isSuccessful) {
+                    val factResponse = response.body()
+                    factResponse?.let {
+                        catFactDao.insertCatFact(CatFactEntity(fact = it.fact, length = it.length))
+                    }
                 }
-            }
-            response
-        }
+                response },
+            retries = 3,
+            delayMillis = 1000L
+        )
     }
 
     override suspend fun getSavedCatFact(): FactResponse? {

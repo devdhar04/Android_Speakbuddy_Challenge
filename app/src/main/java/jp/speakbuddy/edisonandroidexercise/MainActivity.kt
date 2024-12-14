@@ -10,8 +10,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import jp.speakbuddy.edisonandroidexercise.ui.fact.FactScreen
-import jp.speakbuddy.edisonandroidexercise.viewmodel.FactViewModel
 import jp.speakbuddy.edisonandroidexercise.ui.theme.EdisonAndroidExerciseTheme
+import jp.speakbuddy.edisonandroidexercise.viewmodel.FactViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

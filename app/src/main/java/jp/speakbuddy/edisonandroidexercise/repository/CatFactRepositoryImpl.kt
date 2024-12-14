@@ -4,7 +4,10 @@ import jp.speakbuddy.edisonandroidexercise.network.FactService
 import jp.speakbuddy.edisonandroidexercise.network.model.FactResponse
 import jp.speakbuddy.edisonandroidexercise.storage.dao.CatFactDao
 import jp.speakbuddy.edisonandroidexercise.storage.entity.CatFactEntity
+import jp.speakbuddy.edisonandroidexercise.utils.Config.Companion.RETRY_COUNT
+import jp.speakbuddy.edisonandroidexercise.utils.Config.Companion.RETRY_DELAY
 import jp.speakbuddy.edisonandroidexercise.utils.Result
+import jp.speakbuddy.edisonandroidexercise.utils.mapEntityToResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
@@ -25,20 +28,14 @@ class CatFactRepositoryImpl @Inject constructor(
                     }
                 }
                 response },
-            retries = 3,
-            delayMillis = 1000L
+            retries = RETRY_COUNT,
+            delayMillis = RETRY_DELAY
         )
     }
 
     override suspend fun getSavedCatFact(): FactResponse? {
         return withContext(Dispatchers.IO) {
-            catFactDao.getLatestCatFact().firstOrNull()?.let { entity ->
-                mapEntityToResponse(entity)
-            }
+            catFactDao.getLatestCatFact().firstOrNull()?.mapEntityToResponse()
         }
-    }
-
-    private fun mapEntityToResponse(entity: CatFactEntity): FactResponse {
-        return FactResponse(fact = entity.fact, length = entity.length)
     }
 }

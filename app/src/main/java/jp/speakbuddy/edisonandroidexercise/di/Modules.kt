@@ -13,6 +13,9 @@ import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepository
 import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepositoryImpl
 import jp.speakbuddy.edisonandroidexercise.storage.CatFactDatabase
 import jp.speakbuddy.edisonandroidexercise.storage.dao.CatFactDao
+import jp.speakbuddy.edisonandroidexercise.storage.utils.Constants
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module
@@ -33,7 +36,7 @@ class Modules {
         return Room.databaseBuilder(
             context,
             CatFactDatabase::class.java,
-            "cat_fact_database"
+            Constants.CAT_FACT_DATABASE_NAME
         ).build()
     }
 

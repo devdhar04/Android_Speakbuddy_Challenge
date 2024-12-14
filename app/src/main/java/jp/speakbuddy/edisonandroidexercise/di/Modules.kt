@@ -14,6 +14,7 @@ import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepositoryImpl
 import jp.speakbuddy.edisonandroidexercise.storage.CatFactDatabase
 import jp.speakbuddy.edisonandroidexercise.storage.dao.CatFactDao
 import jp.speakbuddy.edisonandroidexercise.storage.utils.Constants
+import jp.speakbuddy.edisonandroidexercise.utils.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
@@ -50,8 +51,12 @@ class Modules {
     @Singleton
     fun provideCatFactRepository(
         catFactApi: FactService,
-        catFactDao: CatFactDao
+        catFactDao: CatFactDao,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
     ): CatFactRepository {
-        return CatFactRepositoryImpl(catFactApi, catFactDao)
+        return CatFactRepositoryImpl(
+            catFactApi, catFactDao,
+            ioDispatcher
+        )
     }
 }

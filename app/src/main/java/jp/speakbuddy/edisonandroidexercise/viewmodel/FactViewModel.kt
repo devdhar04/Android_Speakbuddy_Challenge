@@ -24,6 +24,9 @@ class FactViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
+    /**
+     * Holds the current UI state of the screen.
+     */
     private val _uiState = MutableStateFlow<FactScreenState>(FactScreenState.Loading)
     val uiState: StateFlow<FactScreenState> = _uiState.asStateFlow()
 
@@ -33,6 +36,11 @@ class FactViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Fetches the saved cat fact from the repository.
+     * If a saved fact is available, updates the UI state to Success.
+     * Otherwise, fetches a new cat fact from the API.
+     */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     suspend fun fetchSavedCatFact() {
         _uiState.value = FactScreenState.Loading
@@ -40,9 +48,12 @@ class FactViewModel @Inject constructor(
         val savedFact = catFactRepository.getSavedCatFact()
         savedFact?.let { (fact, length) ->
             _uiState.value = createSuccessState(fact, length)
-        } ?: fetchCatFact()
+        } ?: fetchCatFact() // Otherwise, fetch a new cat fact
     }
 
+    /**
+     * Fetches a new cat fact from the API and updates the UI state.
+     */
     fun fetchCatFact() {
         viewModelScope.launch {
             _uiState.value = FactScreenState.Loading
@@ -51,7 +62,6 @@ class FactViewModel @Inject constructor(
                     val factResponse = result.data
                     _uiState.value = createSuccessState(factResponse.fact, factResponse.length)
                 }
-
                 is Result.Error -> {
                     _uiState.value = FactScreenState.Error(
                         errorMessage = context.getErrorMessage(result),
@@ -61,6 +71,13 @@ class FactViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Creates a Success state for the UI.
+     *
+     * @param fact The cat fact string.
+     * @param length The length of the cat fact string.
+     * @return A [FactScreenState.Success] object.
+     */
     private fun createSuccessState(fact: String, length: Int): FactScreenState.Success {
         return FactScreenState.Success(
             fact = fact,

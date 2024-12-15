@@ -20,6 +20,10 @@ class CatFactRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : CatFactRepository {
 
+    /**
+     * Fetches a cat fact from the API and saves it to the database.
+     * @return A [Result] object indicating success or failure.
+     */
     override suspend fun getCatFact(): Result<FactResponse> {
         return safeApiCall(
             apiCall = {
@@ -37,6 +41,10 @@ class CatFactRepositoryImpl @Inject constructor(
         )
     }
 
+    /**
+     * Retrieves the latest saved cat fact from the database.
+     * @return The latest saved [FactResponse] or null if none exists.
+     */
     override suspend fun getSavedCatFact(): FactResponse? {
         return withContext(ioDispatcher) {
             catFactDao.getLatestCatFact().firstOrNull()?.mapEntityToResponse()

@@ -25,7 +25,7 @@ suspend fun <T> safeApiCall(
                 if (response.isSuccessful && response.body() != null) {
                     return@withContext Result.Success(response.body()!!)
                 } else {
-                    return@withContext Result.Error("Error: ${response.code()} - ${response.message()}")
+                    return@withContext Result.Error.ApiError
                 }
             } catch (e: HttpException) {
                 e
@@ -41,11 +41,11 @@ suspend fun <T> safeApiCall(
             }
         }
 
-        val errorMessage = when (lastError) {
-            is HttpException -> "Network error: ${lastError.message()}"
-            is IOException -> "Please check your internet connection and try again."
-            else -> "Something went wrong: ${lastError?.message}"
+        val error = when (lastError) {
+            is HttpException -> Result.Error.NetworkError
+            is IOException -> Result.Error.ApiError
+            else -> Result.Error.UnknownError
         }
-        Result.Error(errorMessage)
+        error
     }
 }

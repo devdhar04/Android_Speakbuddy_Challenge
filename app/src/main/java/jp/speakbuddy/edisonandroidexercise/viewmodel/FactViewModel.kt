@@ -1,14 +1,17 @@
 package jp.speakbuddy.edisonandroidexercise.viewmodel
 
+import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepository
 import jp.speakbuddy.edisonandroidexercise.ui.FactScreenState
 import jp.speakbuddy.edisonandroidexercise.utils.Config.Companion.FACT_LENGTH
 import jp.speakbuddy.edisonandroidexercise.utils.Config.Companion.SEARCH_TEXT
 import jp.speakbuddy.edisonandroidexercise.utils.Result
+import jp.speakbuddy.edisonandroidexercise.utils.getErrorMessage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FactViewModel @Inject constructor(
-    private val catFactRepository: CatFactRepository
+    private val catFactRepository: CatFactRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<FactScreenState>(FactScreenState.Loading)
@@ -50,7 +54,7 @@ class FactViewModel @Inject constructor(
 
                 is Result.Error -> {
                     _uiState.value = FactScreenState.Error(
-                        errorMessage = result.message ?: "An unexpected error occurred",
+                        errorMessage = context.getErrorMessage(result),
                     )
                 }
             }

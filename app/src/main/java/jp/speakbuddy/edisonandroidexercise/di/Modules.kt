@@ -16,7 +16,6 @@ import jp.speakbuddy.edisonandroidexercise.storage.dao.CatFactDao
 import jp.speakbuddy.edisonandroidexercise.storage.utils.Constants
 import jp.speakbuddy.edisonandroidexercise.utils.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module

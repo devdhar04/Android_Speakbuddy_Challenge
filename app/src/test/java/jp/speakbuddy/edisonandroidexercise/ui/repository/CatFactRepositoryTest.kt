@@ -1,11 +1,11 @@
 package jp.speakbuddy.edisonandroidexercise.ui.repository
 
-import android.accounts.NetworkErrorException
 import jp.speakbuddy.edisonandroidexercise.network.FactService
 import jp.speakbuddy.edisonandroidexercise.network.model.FactResponse
 import jp.speakbuddy.edisonandroidexercise.repository.CatFactRepositoryImpl
 import jp.speakbuddy.edisonandroidexercise.storage.dao.CatFactDao
 import jp.speakbuddy.edisonandroidexercise.storage.entity.CatFactEntity
+import jp.speakbuddy.edisonandroidexercise.utils.Result
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody
@@ -18,9 +18,6 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import retrofit2.HttpException
 import retrofit2.Response
-import jp.speakbuddy.edisonandroidexercise.utils.Result
-import okio.IOException
-import org.mockito.kotlin.any
 
 @RunWith(MockitoJUnitRunner::class)
 class CatFactRepositoryTest {
@@ -35,7 +32,7 @@ class CatFactRepositoryTest {
 
     @Before
     fun setup() {
-        repository = CatFactRepositoryImpl(catFactApi, catFactDao)
+        repository = CatFactRepositoryImpl(catFactApi, catFactDao, ioDispatcher = kotlinx.coroutines.Dispatchers.IO)
     }
 
     @Test
@@ -67,12 +64,11 @@ class CatFactRepositoryTest {
     @Test
     fun `testUnexpectedError`() = runTest {
         // Mock the API to throw a generic exception
-        Mockito.`when`(catFactApi.getFact()).thenThrow(RuntimeException("Unexpected error"))
+        Mockito.`when`(catFactApi.getFact()).thenThrow(RuntimeException("UnknownError"))
 
         val result = repository.getCatFact()
 
         Assert.assertTrue(result is Result.Error)
-        Assert.assertEquals("Something went wrong: Unexpected error", (result as Result.Error).message)
     }
 
     @Test

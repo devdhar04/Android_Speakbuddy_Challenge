@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">Edison Android Exercise</string>
-    <string name="error">Error: %1$s</string>
+    <string name="error">%1$s, Please try again.</string>
     <string name="fact_length">Fact Length: %1$s</string>
     <string name="multiple_cats">Multiple cats!</string>
     <string name="cat_image">Cat Image</string>
     <string name="update_fact">Update fact</string>
     <string name="cat_facts">Cat Facts</string>
+    <string name="network_error">Error in Connecting.</string>
+    <string name="api_error">Error in Api</string>
+    <string name="unknown_error">Unknown Error Occurred.</string>
 </resources>

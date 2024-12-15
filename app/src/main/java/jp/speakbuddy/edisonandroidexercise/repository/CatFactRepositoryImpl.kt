@@ -10,7 +10,6 @@ import jp.speakbuddy.edisonandroidexercise.utils.IoDispatcher
 import jp.speakbuddy.edisonandroidexercise.utils.Result
 import jp.speakbuddy.edisonandroidexercise.utils.mapEntityToResponse
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -23,14 +22,16 @@ class CatFactRepositoryImpl @Inject constructor(
 
     override suspend fun getCatFact(): Result<FactResponse> {
         return safeApiCall(
-            apiCall = { val response = catFactApi.getFact()
+            apiCall = {
+                val response = catFactApi.getFact()
                 if (response.isSuccessful) {
                     val factResponse = response.body()
                     factResponse?.let {
                         catFactDao.insertCatFact(CatFactEntity(fact = it.fact, length = it.length))
                     }
                 }
-                response },
+                response
+            },
             retries = RETRY_COUNT,
             delayMillis = RETRY_DELAY
         )

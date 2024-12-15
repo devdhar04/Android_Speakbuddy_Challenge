@@ -1,5 +1,6 @@
 package jp.speakbuddy.edisonandroidexercise.ui.viewmodel
 
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import jp.speakbuddy.edisonandroidexercise.BuildConfig
 import jp.speakbuddy.edisonandroidexercise.network.model.FactResponse
@@ -20,12 +21,17 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
 
 @RunWith(MockitoJUnitRunner::class)
 class FactViewModelTest {
 
     @Mock
     private lateinit var catFactRepository: CatFactRepository
+
+    @Mock
+    private lateinit var context: Context
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -37,7 +43,7 @@ class FactViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = FactViewModel(catFactRepository)
+        viewModel = FactViewModel(catFactRepository, context = context)
     }
 
     @Test
@@ -101,9 +107,11 @@ class FactViewModelTest {
     @Test
     fun `fetchCatFact error`() = runTest {
         val exception = Exception()
-        Mockito.`when`(catFactRepository.getCatFact()).thenReturn(Result.Error("Network error"))
+        whenever(catFactRepository.getCatFact()).thenReturn(Result.Error.UnknownError)
+        whenever(context.getString(any())).thenReturn("Network error")
 
         viewModel.fetchCatFact()
+        val uiState = viewModel.uiState.value
         advanceUntilIdle()
         Assert.assertEquals(
             FactScreenState.Error(
